@@ -440,6 +440,28 @@
 
 //------------------------------------------------------------------------------------------------------------------------------
 
+- (IBAction)initiateCapture:(id)sender;
+{
+    if ( _numObjects && _objects )
+    {
+        NSData*               commandBuffer = NULL;
+        PTPOperationRequest*  request       = [[PTPOperationRequest alloc] init];
+        
+        request.operationCode       = PTPOperationCodeInitiateCapture;
+        request.numberOfParameters  = 2;
+        request.parameter1          = 0;
+        request.parameter2          = 0;
+        commandBuffer               = request.commandBuffer;
+        
+        [self log:@"\nSending PTP request:"];
+        [self log:[request description]];
+        
+        [self.camera requestSendPTPCommand:commandBuffer outData:NULL sendCommandDelegate:self didSendCommandSelector:@selector(didSendPTPCommand:inData:response:error:contextInfo:) contextInfo:request];
+        
+        // Note: request is released in the 'didSendPTPCommand:inData:response:error:contextInfo:' method
+    }
+}
+
 @end
 
 //------------------------------------------------------------------------------------------------------------------------------
